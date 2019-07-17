@@ -133,8 +133,15 @@ function judgeStatus (snake,food){
   setInterval(() => {
     if(!isPause && mySnake.live){
       const statusCode = judgeStatus(mySnake,myFood);
-      if(statusCode === 1 || statusCode === 2) return false;
+      if(statusCode === 1 || statusCode === 2) {
+        setTimeout(() => {
+          Materialize.toast('HAHAHAHAHA 你输了!', 2500);
+        },200)
+        mySnake.live=false;
+        return false;
+      };
       if(statusCode === 3) {
+        Materialize.toast('太棒了鸭！',800);
         const oldTail = mySnake.currentTail;
         myFood.create();
         mySnake.move();
