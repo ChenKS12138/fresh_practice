@@ -1,3 +1,6 @@
+/**
+ * 在下面添加上能让 canvas 居中的 CSS 语句，注意有多种方法哦~~~
+ */
 *{
     padding: 0;
     margin: 0;
@@ -8,7 +11,7 @@ body{
     text-align: center;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    /* align-items: center; */
     user-select: none;
 }
 .title{
@@ -18,13 +21,17 @@ body{
     font-size: 2rem;
     color: black;
 }
+#cav-container {
+    width: 504px;
+    height: 504px;
+    /* margin: 0 auto; */
+}
 #cav{
-    margin: 0rem 3rem 0rem 3rem;
-    margin-top: 0;
-    border: 0.8rem #696969 solid;
+  border: 0.8rem #696969 solid;
 }
 .main{
     display: flex;
+    margin: 0 auto;
 }
 .direction{
     margin-top: 1rem;
