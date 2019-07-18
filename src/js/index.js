@@ -1,7 +1,7 @@
 class Snake {
   constructor(canvasWidth) {
     this.canvasWidth = canvasWidth;
-    this.body = [22, 21];
+    this.body = [23,22, 21];
     this._directionCode = 2; // 1为上，2为下，3为左，4为右
     this.live = true;
     this._directionLock = false;
@@ -43,7 +43,7 @@ class Snake {
    * 这里加上什么能让小蛇吃到食物后长度增加呢...?
    */
   set nextTail(value) {
-    this.body.push(value);
+
   }
   move() {
     this.body.pop();
@@ -79,12 +79,7 @@ class Grid {
   }
   draw(pixelPosition, pixelColor) {
     this.canvasContext.fillStyle = pixelColor;
-    this.canvasContext.fillRect(
-      (pixelPosition % this.canvasWidth) * (480 / this.canvasWidth) + 1,
-      ~~(pixelPosition / this.canvasWidth) * (480 / this.canvasWidth) + -0.0001,
-      480 / this.canvasWidth - 2 * -0.0001,
-      480 / this.canvasWidth - 2 * -0.0001
-    );
+    this.canvasContext.fillRect((pixelPosition % this.canvasWidth) * (480 / this.canvasWidth) + 1,~~(pixelPosition / this.canvasWidth) * (480 / this.canvasWidth) + -0.0001,480 / this.canvasWidth - 2 * -0.0001,480 / this.canvasWidth - 2 * -0.0001);
   }
   render(snakeBody, foodPosition) {
     this.pixel.fill(this.canvasBackgroundColor);
@@ -102,11 +97,7 @@ function judgeStatus(snake, food) {
   const canvasWidth = snake.canvasWidth;
   if (snake.body.includes(snake.nextHead)) return 1;
   if (snake.currentHead < canvasWidth && snake.directionCode === 1) return 2;
-  if (
-    snake.currentHead < Math.pow(canvasWidth, 2) &&
-    snake.currentHead > canvasWidth * (canvasWidth - 1) &&
-    snake.directionCode === 2
-  )
+  if (snake.currentHead < Math.pow(canvasWidth, 2) && snake.currentHead > canvasWidth * (canvasWidth - 1) && snake.directionCode === 2)
     return 2;
   if (snake.currentHead % canvasWidth === 0 && snake.directionCode === 3)
     return 2;
@@ -126,21 +117,10 @@ function judgeStatus(snake, food) {
   /**
    * 这里加上点东西就能让重置按钮生效啦，尝试一下吧~~~
    */
-  document
-    .querySelector("#reset-button")
-    .addEventListener("click", () => (window.location.reload()));
-  document
-    .querySelector("#up")
-    .addEventListener("click", () => (mySnake.directionCode = 1));
-  document
-    .querySelector("#down")
-    .addEventListener("click", () => (mySnake.directionCode = 2));
-  document
-    .querySelector("#left")
-    .addEventListener("click", () => (mySnake.directionCode = 3));
-  document
-    .querySelector("#right")
-    .addEventListener("click", () => (mySnake.directionCode = 4));
+  document.querySelector("#up").addEventListener("click", () => (mySnake.directionCode = 1));
+  document.querySelector("#down").addEventListener("click", () => (mySnake.directionCode = 2));
+  document.querySelector("#left").addEventListener("click", () => (mySnake.directionCode = 3));
+  document.querySelector("#right").addEventListener("click", () => (mySnake.directionCode = 4));
   document.querySelector("#sp-button").addEventListener("click", () => {
     if(mySnake.live){
       document.querySelector("#sp-text").innerText = isPause ? "PAUSE" : "CONTINUE";
@@ -148,23 +128,21 @@ function judgeStatus(snake, food) {
     }
   });
 
-  /*  请在这里添加对键盘 WASD, ↑ ↓ ← → 按键的监听哦~~~  */
-
   document.addEventListener('keydown',function(e){
     switch(e.keyCode){
-      case 38:case 87:
+      case 38:
         mySnake.directionCode = 1;
         e.returnValue = false;
         break;
-      case 40:case 83:
+      case 40:
         mySnake.directionCode = 2;
         e.returnValue = false;
         break;
-      case 37:case 65:
+      case 37:
         mySnake.directionCode = 3;
         e.returnValue = false;
         break;
-      case 39:case 68:
+      case 39:
         mySnake.directionCode = 4;
         e.returnValue = false;
         break;
@@ -186,16 +164,7 @@ function judgeStatus(snake, food) {
       /**
        * 这里可是是显示分数和产生小蛇食物的关键所在鸭，在下面补充上你的答案吧~~~
        */
-      if (statusCode === 3) {
-        Materialize.toast("太棒了鸭！", 800);
-        const oldTail = mySnake.currentTail;
-        myFood.create();
-        mySnake.move();
-        mySnake.nextTail = oldTail;
-        document.querySelector("#score-number").innerText = mySnake.score;
-      } else {
-        mySnake.move();
-      }
+      mySnake.move();
       myGrid.render(mySnake.body, myFood.position);
     }
   }, 200);
