@@ -142,8 +142,10 @@ function judgeStatus(snake, food) {
     .querySelector("#right")
     .addEventListener("click", () => (mySnake.directionCode = 4));
   document.querySelector("#sp-button").addEventListener("click", () => {
-    document.querySelector("#sp-text").innerText = isPause ? "暂停" : "继续";
-    isPause = !isPause;
+    if(mySnake.live){
+      document.querySelector("#sp-text").innerText = isPause ? "PAUSE" : "CONTINUE";
+      isPause = !isPause;
+    }
   });
 
   /*  请在这里添加对键盘 WASD, ↑ ↓ ← → 按键的监听哦~~~  */
@@ -166,10 +168,6 @@ function judgeStatus(snake, food) {
         mySnake.directionCode = 4;
         e.returnValue = false;
         break;
-      case 80:case 32:case 13:
-        isPause = !isPause;
-        e.returnValue = false;
-        break;
     }
   });
 
@@ -178,7 +176,7 @@ function judgeStatus(snake, food) {
       const statusCode = judgeStatus(mySnake, myFood);
       if (statusCode === 1 || statusCode === 2) {
         document.querySelector("#cav-container").classList.remove("jackInTheBox");
-        document.querySelector("#cav-container").classList.add("shake");
+        document.querySelector("#cav-container").classList.add("shake","faster");
         setTimeout(() => {
           Materialize.toast("HAHAHAHAHA 你输了!", 2500);
         }, 200);
