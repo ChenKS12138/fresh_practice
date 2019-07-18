@@ -43,7 +43,7 @@ class Snake {
    * 这里加上什么能让小蛇吃到食物后长度增加呢...?
    */
   set nextTail(value) {
-    // this.body.push(value);
+    this.body.push(value);
   }
   move() {
     this.body.pop();
@@ -126,9 +126,9 @@ function judgeStatus(snake, food) {
   /**
    * 这里加上点东西就能让重置按钮生效啦，尝试一下吧~~~
    */
-  // document
-  //   .querySelector("#reset-button")
-  //   .addEventListener("click", () => (window.location.reload()));
+  document
+    .querySelector("#reset-button")
+    .addEventListener("click", () => (window.location.reload()));
   document
     .querySelector("#up")
     .addEventListener("click", () => (mySnake.directionCode = 1));
@@ -148,35 +148,37 @@ function judgeStatus(snake, food) {
 
   /*  请在这里添加对键盘 WASD, ↑ ↓ ← → 按键的监听哦~~~  */
 
-  // document.addEventListener('keydown',function(e){
-  //   switch(e.keyCode){
-  //     case 38:case 87:
-  //       mySnake.directionCode = 1;
-  //       e.returnValue = false;
-  //       break;
-  //     case 40:case 83:
-  //       mySnake.directionCode = 2;
-  //       e.returnValue = false;
-  //       break;
-  //     case 37:case 65:
-  //       mySnake.directionCode = 3;
-  //       e.returnValue = false;
-  //       break;
-  //     case 39:case 68:
-  //       mySnake.directionCode = 4;
-  //       e.returnValue = false;
-  //       break;
-  //     case 80:case 32:case 13:
-  //       isPause = !isPause;
-  //       e.returnValue = false;
-  //       break;
-  //   }
-  // });
+  document.addEventListener('keydown',function(e){
+    switch(e.keyCode){
+      case 38:case 87:
+        mySnake.directionCode = 1;
+        e.returnValue = false;
+        break;
+      case 40:case 83:
+        mySnake.directionCode = 2;
+        e.returnValue = false;
+        break;
+      case 37:case 65:
+        mySnake.directionCode = 3;
+        e.returnValue = false;
+        break;
+      case 39:case 68:
+        mySnake.directionCode = 4;
+        e.returnValue = false;
+        break;
+      case 80:case 32:case 13:
+        isPause = !isPause;
+        e.returnValue = false;
+        break;
+    }
+  });
 
   setInterval(() => {
     if (!isPause && mySnake.live) {
       const statusCode = judgeStatus(mySnake, myFood);
       if (statusCode === 1 || statusCode === 2) {
+        document.querySelector("#cav-container").classList.remove("jackInTheBox");
+        document.querySelector("#cav-container").classList.add("shake");
         setTimeout(() => {
           Materialize.toast("HAHAHAHAHA 你输了!", 2500);
         }, 200);
@@ -189,10 +191,10 @@ function judgeStatus(snake, food) {
       if (statusCode === 3) {
         Materialize.toast("太棒了鸭！", 800);
         const oldTail = mySnake.currentTail;
-        // myFood.create();
+        myFood.create();
         mySnake.move();
         mySnake.nextTail = oldTail;
-        // document.querySelector("#score-number").innerText = mySnake.score;
+        document.querySelector("#score-number").innerText = mySnake.score;
       } else {
         mySnake.move();
       }

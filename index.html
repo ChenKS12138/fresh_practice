@@ -8,6 +8,7 @@
     <script src="./lib/jquery.js"></script>
     <link rel="stylesheet" href="./lib/materialize.css">
     <link rel="stylesheet" href="./lib/materialize-icon.css">
+    <link rel="stylesheet" href="./lib/animate.css">
     <link rel="stylesheet" href="./src/css/index.css">
     <script src="./lib/materialize.js"></script>
     <title>Snake</title>
@@ -26,8 +27,8 @@
         </div>
     </nav>
     <p id="score">SCORE:<span id="score-number">0</p>
-    <div id="cav-container"><canvas id='cav'>您的浏览器版本过低,推荐是使用最新版的Chrome浏览器</canvas></div>
-    <div class="main">
+    <div id="cav-container" class="animated jackInTheBox"><canvas id='cav'>您的浏览器版本过低,推荐是使用最新版的Chrome浏览器</canvas></div>
+    <div class="main animated jackInTheBox">
         <div class="direction">
             <div>
                 <div id="up">
@@ -55,9 +56,6 @@
             </div>
         </div>
     </div>
-    <ruby>
-    </ruby>
-    <!-- <script src="./src/js/1index.js"></script> -->
     <script src="./src/js/index.js"></script>
 </body>
 </html>

@@ -11,7 +11,7 @@ body{
     text-align: center;
     display: flex;
     flex-direction: column;
-    /* align-items: center; */
+    align-items: center;
     user-select: none;
 }
 .title{
@@ -24,7 +24,7 @@ body{
 #cav-container {
     width: 504px;
     height: 504px;
-    /* margin: 0 auto; */
+    margin: 0 auto;
 }
 #cav{
   border: 0.8rem #696969 solid;
@@ -32,6 +32,8 @@ body{
 .main{
     display: flex;
     margin: 0 auto;
+    align-items: center;
+    justify-content: center;
 }
 .direction{
     margin-top: 1rem;
