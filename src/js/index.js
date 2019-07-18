@@ -6,6 +6,9 @@ class Snake {
     this.live = true;
     this._directionLock=false;
   }
+  get length(){
+    return this.body.length;
+  }
   get nextHead(){
     switch(this._directionCode){
       case 1: return -this.canvasWidth + this.currentHead;
@@ -60,15 +63,13 @@ class Grid {
     this.foodColor = '#FFD700';
     this.canvasContext = canvasDomElement.getContext('2d');
     this.pixel = new Array(Math.pow(this.canvasWidth,2));
-    this.size = 480; // canvas的宽度和长度
-    this.edgeSize = -0.0001; // 格子间的缝的大小
-    cav.width = this.size;
-    cav.height = this.size;
+    cav.width = 480;
+    cav.height = 480;
     cav.style.backgroundColor = 'snow';
   }
   draw(pixelPosition,pixelColor){
     this.canvasContext.fillStyle = pixelColor;
-    this.canvasContext.fillRect((pixelPosition%this.canvasWidth)*(this.size/this.canvasWidth)+1,(~~(pixelPosition/this.canvasWidth))*(this.size/this.canvasWidth)+this.edgeSize,(this.size/this.canvasWidth)-2*this.edgeSize,(this.size/this.canvasWidth)-2*this.edgeSize);
+    this.canvasContext.fillRect((pixelPosition%this.canvasWidth)*(480/this.canvasWidth)+1,(~~(pixelPosition/this.canvasWidth))*(480/this.canvasWidth)+(-0.0001),(480/this.canvasWidth)-2*(-0.0001),(480/this.canvasWidth)-2*(-0.0001));
   }
   render(snakeBody,foodPosition){
     this.pixel.fill(this.canvasBackgroundColor);
@@ -86,7 +87,7 @@ function judgeStatus (snake,food){
   const canvasWidth = snake.canvasWidth;
   if(snake.body.includes(snake.nextHead)) return 1;
   if(snake.currentHead < canvasWidth && snake.directionCode === 1) return 2;
-  if(snake.currentHead < Math.pow(canvasWidth,2) && snake.currentHead > canvasWidth*(canvasWidth-1) && snake.directionCode === 2) return 2;
+  if(snake.currentHead < Math.pow(canvasWidth,2) && snake.currentHead > canvasWidth*(canvasWidth - 1) && snake.directionCode === 2) return 2;
   if(snake.currentHead % canvasWidth === 0 && snake.directionCode === 3) return 2;
   if((snake.currentHead + 1) % canvasWidth === 0 && snake.directionCode === 4) return 2;
   if(snake.nextHead === food.position) return 3;
@@ -100,11 +101,14 @@ function judgeStatus (snake,food){
   let isPause = true;
   
   myGrid.render(mySnake.body,myFood.position);
-  document.querySelector('#up').addEventListener('click',() => mySnake.directionCode=1);
-  document.querySelector('#down').addEventListener('click',() => mySnake.directionCode=2);
-  document.querySelector('#left').addEventListener('click',() => mySnake.directionCode=3);
-  document.querySelector('#right').addEventListener('click',() => mySnake.directionCode=4);
-  document.querySelector('#sp-button').addEventListener('click',() => isPause=!isPause);
+  document.querySelector('#up').addEventListener('click',() => mySnake.directionCode = 1);
+  document.querySelector('#down').addEventListener('click',() => mySnake.directionCode = 2);
+  document.querySelector('#left').addEventListener('click',() => mySnake.directionCode = 3);
+  document.querySelector('#right').addEventListener('click',() => mySnake.directionCode = 4);
+  document.querySelector('#sp-button').addEventListener('click',() => {
+    document.querySelector('#sp-text').innerText = isPause ? '暂停' : '继续';
+    isPause=!isPause;
+  });
   document.addEventListener('keydown',function(e){
     switch(e.keyCode){
       case 38:case 87:
@@ -146,6 +150,7 @@ function judgeStatus (snake,food){
         myFood.create();
         mySnake.move();
         mySnake.nextTail = oldTail;
+        document.querySelector('#score-number').innerText=mySnake.length-2;
       }
       else{
         mySnake.move();
