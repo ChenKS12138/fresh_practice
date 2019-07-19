@@ -35,8 +35,6 @@ body{
 }
 .direction{
     margin-top: 1rem;
-    transform: rotate(45deg);
-    
 }
 .direction>div{
     display: flex;
@@ -44,31 +42,7 @@ body{
 .direction>div>div{
     width: 80px;
     height: 80px;
-    background-color: #ff9800;
-    color: white;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 0.5px whitesmoke solid;
-    cursor: pointer;
-}
-.direction>div>div:active{
-    background-color: #f57c00;
-}
-.button-name{
-    transform: rotate(-45deg);
-}
-#up{
-    border-radius: 100% 0 0 0;
-}
-#right{
-    border-radius: 0 100% 0 0;
-}
-#down{
-    border-radius: 0 0 100% 0;
-}
-#left{
-    border-radius: 0 0 0 100%;
 }
 .controller{
     margin-top: 5px;
