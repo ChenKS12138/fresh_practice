@@ -1,11 +1,20 @@
+/**
+ * 这个文件主要由 Snake类，Food类，Grid类,一个judgeStatus函数以及若干代码组成
+ * 学习类的概念对编程很有帮助鸭~
+ * 我们操作的对象其实是一个20X20的网格
+ */
 class Snake {
   constructor(canvasWidth) {
     this.canvasWidth = canvasWidth;
-    this.body = [23,22, 21];
-    this._directionCode = 2; // 1为上，2为下，3为左，4为右
+    this.body = [23,22, 21]; // 我们是用
+    this._directionCode = 2; // 约定1为上，2为下，3为左，4为右
     this.live = true;
     this._directionLock = false;
   }
+  /**
+   * 为啥有的函数是用get和set开头呢?这是个很有意思的东西,它们是存值函数和取值函数
+   * 好好使用它们可以使代码更优雅
+   */
   get score() {
     return this.body.length - 2;
   }
@@ -67,7 +76,7 @@ class Food {
 
 class Grid {
   constructor(canvasDomElement) {
-    this.canvasWidth = 20; // canvas 中一行的格子数  20吧
+    this.canvasWidth = 20; // canvas 中一行的格子数
     this.canvasBackgroundColor = "snow";
     this.snakeColor = "#008B00";
     this.foodColor = "#FFD700";
@@ -90,7 +99,7 @@ class Grid {
 }
 
 /**
- * judgeStatus是个用于判断蛇当前状态的函数
+ * judgeStatus是个用于判断蛇当前状态的函数，这个函数不需要变更
  * 返回1表示吃到自己了，返回2表示撞到墙了，返回3表示吃到果实,返回0表示什么都没发生
  */
 function judgeStatus(snake, food) {
@@ -107,65 +116,68 @@ function judgeStatus(snake, food) {
   return 0;
 }
 
-(function() {
-  const myGrid = new Grid(document.querySelector("#cav"));
-  const mySnake = new Snake(myGrid.canvasWidth);
-  const myFood = new Food(myGrid.canvasWidth);
-  let isPause = true;
 
-  myGrid.render(mySnake.body, myFood.position);
-  /**
-   * 这里加上点东西就能让重置按钮生效啦，尝试一下吧~~~
-   */
-  document.querySelector("#up").addEventListener("click", () => (mySnake.directionCode = 1));
-  document.querySelector("#down").addEventListener("click", () => (mySnake.directionCode = 2));
-  document.querySelector("#left").addEventListener("click", () => (mySnake.directionCode = 3));
-  document.querySelector("#right").addEventListener("click", () => (mySnake.directionCode = 4));
-  document.querySelector("#sp-button").addEventListener("click", () => {
-    if(mySnake.live){
-      document.querySelector("#sp-text").innerText = isPause ? "PAUSE" : "CONTINUE";
-      isPause = !isPause;
+const myGrid = new Grid(document.querySelector("#cav"));
+const mySnake = new Snake(myGrid.canvasWidth);
+const myFood = new Food(myGrid.canvasWidth);
+let isPause = true;
+
+myGrid.render(mySnake.body, myFood.position);
+/**
+ * 这里加上点东西就能让重置按钮生效啦，尝试一下吧~~~
+ */
+document.querySelector("#up").addEventListener("click", () => mySnake.directionCode = 1);
+document.querySelector("#down").addEventListener("click", () => mySnake.directionCode = 2);
+document.querySelector("#left").addEventListener("click", () => mySnake.directionCode = 3);
+document.querySelector("#right").addEventListener("click", () => mySnake.directionCode = 4);
+document.querySelector("#sp-button").addEventListener("click", () => {
+  if(mySnake.live){
+    document.querySelector("#sp-text").innerText = isPause ? "PAUSE" : "CONTINUE";
+    isPause = !isPause;
+  }
+});
+document.addEventListener('keydown',function(e){
+  switch(e.keyCode){
+    case 38:
+      mySnake.directionCode = 1;
+      e.returnValue = false;
+      break;
+    case 40:
+      mySnake.directionCode = 2;
+      e.returnValue = false;
+      break;
+    case 37:
+      mySnake.directionCode = 3;
+      e.returnValue = false;
+      break;
+    case 39:
+      mySnake.directionCode = 4;
+      e.returnValue = false;
+      break;
+  }
+});
+
+setInterval(() => {
+  if (!isPause && mySnake.live) {
+    const statusCode = judgeStatus(mySnake, myFood);
+    if (statusCode === 1 || statusCode === 2) {
+      document.querySelector("#cav-container").classList.remove("jackInTheBox");
+      document.querySelector("#cav-container").classList.add("shake","faster");
+      setTimeout(() => {
+        Materialize.toast("HAHAHAHAHA 你输了!", 2500);
+      }, 200);
+      mySnake.live = false;
+      return false;
     }
-  });
-
-  document.addEventListener('keydown',function(e){
-    switch(e.keyCode){
-      case 38:
-        mySnake.directionCode = 1;
-        e.returnValue = false;
-        break;
-      case 40:
-        mySnake.directionCode = 2;
-        e.returnValue = false;
-        break;
-      case 37:
-        mySnake.directionCode = 3;
-        e.returnValue = false;
-        break;
-      case 39:
-        mySnake.directionCode = 4;
-        e.returnValue = false;
-        break;
-    }
-  });
-
-  setInterval(() => {
-    if (!isPause && mySnake.live) {
-      const statusCode = judgeStatus(mySnake, myFood);
-      if (statusCode === 1 || statusCode === 2) {
-        document.querySelector("#cav-container").classList.remove("jackInTheBox");
-        document.querySelector("#cav-container").classList.add("shake","faster");
-        setTimeout(() => {
-          Materialize.toast("HAHAHAHAHA 你输了!", 2500);
-        }, 200);
-        mySnake.live = false;
-        return false;
-      }
+    if(statusCode===3){
       /**
        * 这里可是是显示分数和产生小蛇食物的关键所在鸭，在下面补充上你的答案吧~~~
        */
-      mySnake.move();
-      myGrid.render(mySnake.body, myFood.position);
+      setTimeout(() => {
+        Materialize.toast("好奇怪鸭~怎么吃不到", 2500);
+      }, 200);
     }
-  }, 200);
-})();
+    mySnake.move();
+    myGrid.render(mySnake.body, myFood.position);
+  }
+}, 200);
