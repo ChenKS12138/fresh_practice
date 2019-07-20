@@ -6,7 +6,7 @@
 class Snake {
   constructor(canvasWidth) {
     this.canvasWidth = canvasWidth;
-    this.body = [23,22, 21]; // 我们是用
+    this.body = [23, 22, 21]; // 我们是用
     this._directionCode = 2; // 约定1为上，2为下，3为左，4为右
     this.live = true;
     this._directionLock = false;
@@ -16,7 +16,7 @@ class Snake {
    * 好好使用它们可以使代码更优雅
    */
   get score() {
-    return this.body.length - 2;
+    return this.body.length - 3;
   }
   get nextHead() {
     switch (this._directionCode) {
@@ -48,11 +48,11 @@ class Snake {
       this._directionLock = true;
     }
   }
-  /**
-   * 这里加上什么能让小蛇吃到食物后长度增加呢...?
-   */
-  set nextTail(value) {
 
+  set nextTail(value) {
+    /**
+     * 这里加上什么能让小蛇吃到食物后长度增加呢...?
+     */
   }
   move() {
     this.body.pop();
@@ -88,7 +88,12 @@ class Grid {
   }
   draw(pixelPosition, pixelColor) {
     this.canvasContext.fillStyle = pixelColor;
-    this.canvasContext.fillRect((pixelPosition % this.canvasWidth) * (480 / this.canvasWidth) + 1,~~(pixelPosition / this.canvasWidth) * (480 / this.canvasWidth) + -0.0001,480 / this.canvasWidth - 2 * -0.0001,480 / this.canvasWidth - 2 * -0.0001);
+    this.canvasContext.fillRect(
+      (pixelPosition % this.canvasWidth) * (480 / this.canvasWidth) + 1,
+      ~~(pixelPosition / this.canvasWidth) * (480 / this.canvasWidth) + -0.0001,
+      480 / this.canvasWidth - 2 * -0.0001,
+      480 / this.canvasWidth - 2 * -0.0001
+    );
   }
   render(snakeBody, foodPosition) {
     this.pixel.fill(this.canvasBackgroundColor);
@@ -98,7 +103,6 @@ class Grid {
   }
 }
 
-
 /**
  * judgeStatus是个用于判断蛇当前状态的函数，这个函数不需要变更
  * 返回1表示吃到自己了，返回2表示撞到墙了，返回3表示吃到果实,返回0表示什么都没发生
@@ -107,7 +111,11 @@ function judgeStatus(snake, food) {
   const canvasWidth = snake.canvasWidth;
   if (snake.body.includes(snake.nextHead)) return 1;
   if (snake.currentHead < canvasWidth && snake.directionCode === 1) return 2;
-  if (snake.currentHead < Math.pow(canvasWidth, 2) && snake.currentHead > canvasWidth * (canvasWidth - 1) && snake.directionCode === 2)
+  if (
+    snake.currentHead < Math.pow(canvasWidth, 2) &&
+    snake.currentHead > canvasWidth * (canvasWidth - 1) &&
+    snake.directionCode === 2
+  )
     return 2;
   if (snake.currentHead % canvasWidth === 0 && snake.directionCode === 3)
     return 2;
@@ -116,7 +124,6 @@ function judgeStatus(snake, food) {
   if (snake.nextHead === food.position) return 3;
   return 0;
 }
-
 
 const myGrid = new Grid(document.querySelector("#cav"));
 const mySnake = new Snake(myGrid.canvasWidth);
@@ -127,18 +134,33 @@ myGrid.render(mySnake.body, myFood.position);
 /**
  * 这里加上点东西就能让重置按钮生效啦，尝试一下吧~~~
  */
-document.querySelector("#up").addEventListener("click", () => mySnake.directionCode = 1);
-document.querySelector("#down").addEventListener("click", () => mySnake.directionCode = 2);
-document.querySelector("#left").addEventListener("click", () => mySnake.directionCode = 3);
-document.querySelector("#right").addEventListener("click", () => mySnake.directionCode = 4);
+document
+  .querySelector("#up")
+  .addEventListener("click", () => (mySnake.directionCode = 1));
+document
+  .querySelector("#down")
+  .addEventListener("click", () => (mySnake.directionCode = 2));
+document
+  .querySelector("#left")
+  .addEventListener("click", () => (mySnake.directionCode = 3));
+document
+  .querySelector("#right")
+  .addEventListener("click", () => (mySnake.directionCode = 4));
 document.querySelector("#sp-button").addEventListener("click", () => {
-  if(mySnake.live){
-    document.querySelector("#sp-text").innerText = isPause ? "PAUSE" : "CONTINUE";
+  if (mySnake.live) {
+    document.querySelector("#sp-text").innerText = isPause
+      ? "PAUSE"
+      : "CONTINUE";
     isPause = !isPause;
   }
 });
-document.addEventListener('keydown',function(e){
-  switch(e.keyCode){
+
+/**
+ * 这里对↑ ↓ ← → 的监听已经写好啦，
+ * 再添加上对W A S D 的监听吧！
+ */
+document.addEventListener("keydown", function(e) {
+  switch (e.keyCode) {
     case 38:
       mySnake.directionCode = 1;
       e.returnValue = false;
@@ -163,16 +185,18 @@ setInterval(() => {
     const statusCode = judgeStatus(mySnake, myFood);
     if (statusCode === 1 || statusCode === 2) {
       document.querySelector("#cav-container").classList.remove("jackInTheBox");
-      document.querySelector("#cav-container").classList.add("shake","faster");
+      document.querySelector("#cav-container").classList.add("shake", "faster");
       setTimeout(() => {
         Materialize.toast("HAHAHAHAHA 你输了!", 2500);
       }, 200);
       mySnake.live = false;
       return false;
     }
-    if(statusCode===3){
+    if (statusCode === 3) {
       /**
-       * 这里可是是显示分数和产生小蛇食物的关键所在鸭，在下面补充上你的答案吧~~~
+       * 这里可是是显示分数和产生小蛇食物的关键所在鸭，
+       * 也可以让小蛇从视觉上长度增加哦
+       * 在下面补充上你的答案吧~~~
        */
       setTimeout(() => {
         Materialize.toast("好奇怪鸭~怎么吃不到", 2500);
