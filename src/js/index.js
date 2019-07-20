@@ -3,9 +3,101 @@
  * 学习类的概念对编程很有帮助鸭~
  * 我们操作的对象其实是一个20X20的网格
  */
-import Food from './components/Food.js';
-import Snake from './components/Snake.js';
-import Grid from './components/Grid.js';
+class Snake {
+  constructor(canvasWidth) {
+    this.canvasWidth = canvasWidth;
+    this.body = [23,22, 21]; // 我们是用
+    this._directionCode = 2; // 约定1为上，2为下，3为左，4为右
+    this.live = true;
+    this._directionLock = false;
+  }
+  /**
+   * 为啥有的函数是用get和set开头呢?这是个很有意思的东西,它们是存值函数和取值函数
+   * 好好使用它们可以使代码更优雅
+   */
+  get score() {
+    return this.body.length - 2;
+  }
+  get nextHead() {
+    switch (this._directionCode) {
+      case 1:
+        return -this.canvasWidth + this.currentHead;
+      case 2:
+        return this.canvasWidth + this.currentHead;
+      case 3:
+        return -1 + this.currentHead;
+      case 4:
+        return 1 + this.currentHead;
+      default:
+        return this.currentHead;
+    }
+  }
+  get currentHead() {
+    return this.body[0];
+  }
+  get currentTail() {
+    return this.body[this.body.length - 1];
+  }
+  get directionCode() {
+    return this._directionCode;
+  }
+  set directionCode(value) {
+    const codeSum = value + this._directionCode;
+    if (codeSum !== 3 && codeSum !== 7 && !this._directionLock) {
+      this._directionCode = value;
+      this._directionLock = true;
+    }
+  }
+  /**
+   * 这里加上什么能让小蛇吃到食物后长度增加呢...?
+   */
+  set nextTail(value) {
+
+  }
+  move() {
+    this.body.pop();
+    this.body.unshift(this.nextHead);
+    this._directionLock = false;
+  }
+}
+
+class Food {
+  constructor(canvasWidth) {
+    this.canvasWidth = canvasWidth;
+    this.position = 13;
+    this.create();
+  }
+  create() {
+    this.position = parseInt(
+      (Math.random() * 1000) % Math.pow(this.canvasWidth, 2)
+    );
+  }
+}
+
+class Grid {
+  constructor(canvasDomElement) {
+    this.canvasWidth = 20; // canvas 中一行的格子数
+    this.canvasBackgroundColor = "snow";
+    this.snakeColor = "#008B00";
+    this.foodColor = "#FFD700";
+    this.canvasContext = canvasDomElement.getContext("2d");
+    this.pixel = new Array(Math.pow(this.canvasWidth, 2));
+    cav.width = 480;
+    cav.height = 480;
+    cav.style.backgroundColor = "snow";
+  }
+  draw(pixelPosition, pixelColor) {
+    this.canvasContext.fillStyle = pixelColor;
+    this.canvasContext.fillRect((pixelPosition % this.canvasWidth) * (480 / this.canvasWidth) + 1,~~(pixelPosition / this.canvasWidth) * (480 / this.canvasWidth) + -0.0001,480 / this.canvasWidth - 2 * -0.0001,480 / this.canvasWidth - 2 * -0.0001);
+  }
+  render(snakeBody, foodPosition) {
+    this.pixel.fill(this.canvasBackgroundColor);
+    this.pixel[foodPosition] = this.foodColor;
+    snakeBody.forEach(bodyItem => (this.pixel[bodyItem] = this.snakeColor));
+    this.pixel.forEach((color, index) => this.draw(index, color));
+  }
+}
+
 
 /**
  * judgeStatus是个用于判断蛇当前状态的函数，这个函数不需要变更

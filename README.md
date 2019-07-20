@@ -45,10 +45,6 @@
     ├── css  
     │   └── index.css
     └── js
-        ├── components  模块化有助于管理自己的代码
-        │   ├── Food.js
-        │   ├── Grid.js
-        │   └── Snake.js
         └── index.js
 
 
