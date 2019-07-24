@@ -6,7 +6,7 @@
 class Snake {
   constructor(canvasWidth) {
     this.canvasWidth = canvasWidth;
-    this.body = [23, 22, 21]; // 我们是用
+    this.body = [23, 22, 21]; // 我们是用一个一维数组表示蛇的身体的位置
     this._directionCode = 2; // 约定1为上，2为下，3为左，4为右
     this.live = true;
     this._directionLock = false;
@@ -99,7 +99,7 @@ class Grid {
     this.pixel.fill(this.canvasBackgroundColor);
     this.pixel[foodPosition] = this.foodColor;
     snakeBody.forEach(bodyItem => (this.pixel[bodyItem] = this.snakeColor));
-    this.pixel.forEach((color, index) => this.draw(index, color));
+    this.pixel.forEach((color, index) => this.draw(index, color)); // 使用draw函数依次渲染这个20X20的网格（它是个有400个元素的一维数组）
   }
 }
 
