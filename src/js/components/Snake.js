@@ -17,7 +17,6 @@ export default class Snake {
         i=0;
       }
     }
-    console.log(this.body);
   }
   get length() {
     return this.body.length;
